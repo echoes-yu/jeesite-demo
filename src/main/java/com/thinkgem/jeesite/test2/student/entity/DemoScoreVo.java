@@ -2,7 +2,6 @@ package com.thinkgem.jeesite.test2.student.entity;
 
 import com.thinkgem.jeesite.common.persistence.DataEntity;
 
-import java.math.BigDecimal;
 
 public class DemoScoreVo  extends DataEntity<DemoScore> {
 
@@ -12,9 +11,9 @@ public class DemoScoreVo  extends DataEntity<DemoScore> {
 
     private DemoSubject demoSubject;		// 学生编号
 
-    private BigDecimal scoreStart;		// 分数
+    private String scoreStart;		// 分数
 
-    private BigDecimal scoreEnd;		// 分数
+    private String scoreEnd;		// 分数
 
     public DemoScoreVo() {
         super();
@@ -41,19 +40,19 @@ public class DemoScoreVo  extends DataEntity<DemoScore> {
         this.demoSubject = demoSubject;
     }
 
-    public BigDecimal getScoreStart() {
+    public String getScoreStart() {
         return scoreStart;
     }
 
-    public void setScoreStart(BigDecimal scoreStart) {
+    public void setScoreStart(String scoreStart) {
         this.scoreStart = scoreStart;
     }
 
-    public BigDecimal getScoreEnd() {
+    public String getScoreEnd() {
         return scoreEnd;
     }
 
-    public void setScoreEnd(BigDecimal scoreEnd) {
+    public void setScoreEnd(String scoreEnd) {
         this.scoreEnd = scoreEnd;
     }
 }
