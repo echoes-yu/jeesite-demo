@@ -36,9 +36,9 @@
             <form:input path="demoSubject.subjectName" htmlEscape="false" maxlength="64" class="input-medium"/>
         </li>
         <li><label>分值范围：</label>
-            <form:input path="scoreStart" htmlEscape="false" maxlength="64" class="input-medium" text="number"/>
+            <form:input path="scoreStart" htmlEscape="false" maxlength="64" class="input-medium"/>
             -
-            <form:input path="scoreEnd" htmlEscape="false" maxlength="64" class="input-medium" text="number"/>
+            <form:input path="scoreEnd" htmlEscape="false" maxlength="64" class="input-medium"/>
         </li>
 
 
