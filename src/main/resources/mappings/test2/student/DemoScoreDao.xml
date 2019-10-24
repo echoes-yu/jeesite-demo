@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.test2.student.dao.DemoScoreDao">
+
+    <sql id="demoScoreColumns">
+		a.id AS "id",
+		a.student_id AS "studentId",
+		b.username AS "studentName",
+		a.subject_id AS "subjectId",
+		e.subject_name AS "subjectName",
+		a.score AS "score",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+
+    <sql id="demoScoreJoins">
+		LEFT JOIN demo_student b ON a.student_id = b.id
+		LEFT JOIN demo_subject e ON a.subject_id = e.id
+	</sql>
+
+    <select id="get" resultType="DemoScore">
+        SELECT
+        <include refid="demoScoreColumns"/>
+        FROM demo_score a
+        <include refid="demoScoreJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="DemoScore">
+        SELECT
+        <include refid="demoScoreColumns"/>
+        FROM demo_score a
+        <include refid="demoScoreJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="studentName != null and studentName != ''">
+				AND a.student_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{studentName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{studentName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{studentName},'%')</if>
+			</if>
+			<if test="subjectName != null and subjectName != ''">
+				AND a.subject_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{subjectName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{subjectName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{subjectName},'%')</if>
+			</if>
+		</where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+
+	<select id="findListByScore" resultType="DemoScore">
+		SELECT
+		<include refid="demoScoreColumns"/>
+		FROM demo_score a
+		<include refid="demoScoreJoins"/>
+
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="demoStudent.username != null and demoStudent.username != ''">
+				AND a.student_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{demoStudent.username}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{demoStudent.username}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{demoStudent.username},'%')</if>
+			</if>
+			<if test="demoSubject.subjectName != null and demoSubject.subjectName != ''">
+				AND a.subject_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{demoSubject.subjectName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{demoSubject.subjectName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{demoSubject.subjectName},'%')</if>
+			</if>
+
+
+			<if test="scoreStart != null ">
+				AND a.score <![CDATA[ >= ]]> scoreStart
+			</if>
+
+			<if test="scoreEnd != null ">
+				AND scoreEnd <![CDATA[ >= ]]> a.score
+			</if>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+    <select id="findAllList" resultType="DemoScore">
+        SELECT
+        <include refid="demoScoreColumns"/>
+        FROM demo_score a
+        <include refid="demoScoreJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO demo_score(
+			id,
+			student_id,
+			student_name,
+			subject_id,
+			subject_name,
+			score,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{demoStudent.id},
+			#{demoStudent.username},
+			#{demoSubject.id},
+			#{demoSubject.subjectName},
+			#{score},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE demo_score SET 	
+			student_id = #{demoStudent.id},
+			student_name = #{demoStudent.username},
+			subject_id = #{demoSubject.id},
+			subject_name = #{demoSubject.subjectName},
+			score = #{score},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+
+    <update id="delete">
+		UPDATE demo_score SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+</mapper>
